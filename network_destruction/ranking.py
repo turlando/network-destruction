@@ -40,14 +40,14 @@ def distance(graph_0: Graph, graph_1: Graph) -> float:
 
 
 def distance_ranking(graph: Graph) -> List[GraphRanking]:
-    nodes = list(graph.nodes())
+    def make_ranking(node):
+        mutilated_graph = remove_node_edges(graph, node)
+        return GraphRanking(node,
+                            distance(graph, mutilated_graph),
+                            number_connected_components(mutilated_graph))
 
-    rankings = [GraphRanking(node,
-                             distance(graph, mutilated_graph),
-                             number_connected_components(mutilated_graph))
-                for node in nodes
-                # dummy for...in for local variable assignment
-                for mutilated_graph in [remove_node_edges(graph, node)]]
+    nodes = list(graph.nodes())
+    rankings = [make_ranking(node) for node in nodes]
 
     return sorted(rankings,
                   key=lambda ranking: ranking.distance,
