@@ -1,4 +1,5 @@
 from typing import List
+from math import sqrt
 from dataclasses import dataclass
 from networkx import (Graph, erdos_renyi_graph,
                       laplacian_spectrum, number_connected_components)
@@ -34,9 +35,9 @@ def distance(graph_0: Graph, graph_1: Graph) -> float:
     spectrum_1 = laplacian_spectrum(graph_1)
 
     differences = spectrum_0 - spectrum_1
-    power = differences ** 2
+    powers = differences ** 2
 
-    return sum(power)
+    return sqrt(sum(powers))
 
 
 def distance_ranking(graph: Graph) -> List[GraphRanking]:
