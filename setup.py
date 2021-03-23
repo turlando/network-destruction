@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='network-destruction',
@@ -13,5 +13,11 @@ setup(
 
     python_requires='>=3.6, <4',
 
+    package_dir={'network_destruction': 'network_destruction'},
     packages=['network_destruction'],
+
+    install_requires=[
+        'networkx==2.5',
+        'scipy==1.6.1'
+    ]
 )
