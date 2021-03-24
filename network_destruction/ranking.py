@@ -6,11 +6,6 @@ from networkx import (Graph, erdos_renyi_graph,
                       connected_components)
 
 
-RANDOM_SEED = 1616492035
-GRAPH_NODES = 100
-GRAPH_EDGE_PROBABILITY = 0.25
-
-
 @dataclass
 class GraphRanking:
     graph: Graph
@@ -20,8 +15,12 @@ class GraphRanking:
     giant_order: int
 
 
-def make_graph() -> Graph:
-    return erdos_renyi_graph(GRAPH_NODES, GRAPH_EDGE_PROBABILITY, RANDOM_SEED)
+def make_graph(
+        nodes: int = 100,
+        probability: int = 0.25,
+        seed: int = 1616492035
+) -> Graph:
+    return erdos_renyi_graph(nodes, probability, seed)
 
 
 def remove_node_edges(graph: Graph, node: int) -> Graph:
