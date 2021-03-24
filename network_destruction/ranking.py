@@ -1,9 +1,12 @@
 from typing import List
-from math import sqrt
 from dataclasses import dataclass
-from networkx import (Graph, erdos_renyi_graph,
-                      laplacian_spectrum, number_connected_components,
-                      connected_components)
+from math import sqrt
+
+from networkx import (Graph,
+                      erdos_renyi_graph, laplacian_spectrum,
+                      number_connected_components, connected_components,
+                      draw)
+import matplotlib.pyplot as plt
 
 
 @dataclass
@@ -21,6 +24,12 @@ def make_graph(
         seed: int = 1616492035
 ) -> Graph:
     return erdos_renyi_graph(nodes, probability, seed)
+
+
+def show_graph(graph: Graph) -> None:
+    figure, axes = plt.subplots()
+    draw(graph, ax=axes)
+    figure.show()
 
 
 def remove_node_edges(graph: Graph, node: int) -> Graph:
