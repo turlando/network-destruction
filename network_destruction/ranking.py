@@ -2,7 +2,8 @@ from typing import List
 from math import sqrt
 from dataclasses import dataclass
 from networkx import (Graph, erdos_renyi_graph,
-                      laplacian_spectrum, number_connected_components)
+                      laplacian_spectrum, number_connected_components,
+                      connected_components)
 
 
 RANDOM_SEED = 1616492035
@@ -12,9 +13,11 @@ GRAPH_EDGE_PROBABILITY = 0.25
 
 @dataclass
 class GraphRanking:
+    graph: Graph
     isolated_node: int
     distance: float
     components: int
+    giant_order: int
 
 
 def make_graph() -> Graph:
@@ -40,12 +43,20 @@ def distance(graph_0: Graph, graph_1: Graph) -> float:
     return sqrt(sum(powers))
 
 
+def giant_order(graph: Graph) -> Graph:
+    "Return the number of nodes in the largest subgraph."
+    nodes = max(connected_components(graph), key=len)
+    return len(nodes)
+
+
 def distance_ranking(graph: Graph) -> List[GraphRanking]:
     def make_ranking(node):
         mutilated_graph = remove_node_edges(graph, node)
-        return GraphRanking(node,
+        return GraphRanking(mutilated_graph,
+                            node,
                             distance(graph, mutilated_graph),
-                            number_connected_components(mutilated_graph))
+                            number_connected_components(mutilated_graph),
+                            giant_order(mutilated_graph))
 
     nodes = list(graph.nodes())
     rankings = [make_ranking(node) for node in nodes]
