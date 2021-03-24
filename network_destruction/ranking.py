@@ -12,7 +12,7 @@ GRAPH_EDGE_PROBABILITY = 0.25
 
 @dataclass
 class GraphRanking:
-    removed_node: int
+    isolated_node: int
     distance: float
     components: int
 
