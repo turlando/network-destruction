@@ -1,5 +1,5 @@
 from typing import List
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from math import sqrt
 
 from networkx import (Graph,
@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 @dataclass
 class GraphRanking:
-    graph: Graph
+    graph: Graph = field(repr=False)
     isolated_node: int
     distance: float
     components: int
