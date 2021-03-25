@@ -20,7 +20,7 @@ class GraphRanking:
 
 def make_graph(
         nodes: int = 100,
-        probability: int = 0.25,
+        probability: float = 0.25,
         seed: int = 1616492035
 ) -> Graph:
     return erdos_renyi_graph(nodes, probability, seed)
