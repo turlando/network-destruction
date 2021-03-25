@@ -72,3 +72,12 @@ def distance_ranking(graph: Graph) -> List[GraphRanking]:
     return sorted(rankings,
                   key=lambda ranking: ranking.distance,
                   reverse=True)
+
+
+def disruption_ranking(graph: Graph, iterations: int = 20):
+    for _ in range(iterations):
+        distances = distance_ranking(graph)
+        best = distances[0]
+
+        graph = best.graph
+        yield best
