@@ -1,15 +1,10 @@
 from typing import List
 from dataclasses import dataclass, field
 from math import sqrt
-
-from networkx import (Graph,
-                      erdos_renyi_graph,
-                      number_connected_components, connected_components,
-                      draw)
-import matplotlib.pyplot as plt
-
+from networkx import Graph, number_connected_components
 from network_destruction.distance import (laplacian_distance,
                                           normalized_laplacian_distance)
+from network_destruction.graph import remove_node_edges, giant_order
 
 
 @dataclass
@@ -20,35 +15,6 @@ class GraphRanking:
     normalized_laplacian_distance: float
     components: int
     giant_order: int
-
-
-def make_graph(
-        nodes: int = 100,
-        probability: float = 0.25,
-        seed: int = 1616492035
-) -> Graph:
-    return erdos_renyi_graph(nodes, probability, seed)
-
-
-def show_graph(graph: Graph) -> None:
-    figure, axes = plt.subplots()
-    draw(graph, ax=axes)
-    figure.show()
-
-
-def remove_node_edges(graph: Graph, node: int) -> Graph:
-    g = graph.copy()
-
-    node_edges = list(g.edges(node))
-    g.remove_edges_from(node_edges)
-
-    return g
-
-
-def giant_order(graph: Graph) -> Graph:
-    "Return the number of nodes in the largest subgraph."
-    nodes = max(connected_components(graph), key=len)
-    return len(nodes)
 
 
 def distance_ranking(graph: Graph) -> List[GraphRanking]:
