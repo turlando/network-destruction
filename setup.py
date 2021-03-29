@@ -17,8 +17,9 @@ setup(
     packages=['network_destruction'],
 
     install_requires=[
-        'networkx==2.5',
+        'numpy==1.20.2',
         'scipy==1.6.1',
-        'matplotlib==3.3.4'
+        'matplotlib==3.3.4',
+        'networkx==2.5'
     ]
 )
