@@ -4,6 +4,7 @@ from math import sqrt
 
 from networkx import (Graph,
                       erdos_renyi_graph, laplacian_spectrum,
+                      normalized_laplacian_spectrum,
                       number_connected_components, connected_components,
                       draw)
 import matplotlib.pyplot as plt
@@ -13,7 +14,8 @@ import matplotlib.pyplot as plt
 class GraphRanking:
     graph: Graph = field(repr=False)
     isolated_node: int
-    distance: float
+    laplacian_distance: float
+    normalized_laplacian_distance: float
     components: int
     giant_order: int
 
@@ -41,9 +43,19 @@ def remove_node_edges(graph: Graph, node: int) -> Graph:
     return g
 
 
-def distance(graph_0: Graph, graph_1: Graph) -> float:
+def laplacian_distance(graph_0: Graph, graph_1: Graph) -> float:
     spectrum_0 = laplacian_spectrum(graph_0)
     spectrum_1 = laplacian_spectrum(graph_1)
+
+    differences = spectrum_0 - spectrum_1
+    powers = differences ** 2
+
+    return sqrt(sum(powers))
+
+
+def normalized_laplacian_distance(graph_0: Graph, graph_1: Graph) -> float:
+    spectrum_0 = normalized_laplacian_spectrum(graph_0)
+    spectrum_1 = normalized_laplacian_spectrum(graph_1)
 
     differences = spectrum_0 - spectrum_1
     powers = differences ** 2
@@ -62,7 +74,8 @@ def distance_ranking(graph: Graph) -> List[GraphRanking]:
         mutilated_graph = remove_node_edges(graph, node)
         return GraphRanking(mutilated_graph,
                             node,
-                            distance(graph, mutilated_graph),
+                            laplacian_distance(graph, mutilated_graph),
+                            normalized_laplacian_distance(graph, mutilated_graph),
                             number_connected_components(mutilated_graph),
                             giant_order(mutilated_graph))
 
@@ -70,7 +83,7 @@ def distance_ranking(graph: Graph) -> List[GraphRanking]:
     rankings = [make_ranking(node) for node in nodes]
 
     return sorted(rankings,
-                  key=lambda ranking: ranking.distance,
+                  key=lambda ranking: ranking.normalized_laplacian_distance,
                   reverse=True)
 
 
