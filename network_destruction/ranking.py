@@ -3,11 +3,13 @@ from dataclasses import dataclass, field
 from math import sqrt
 
 from networkx import (Graph,
-                      erdos_renyi_graph, laplacian_spectrum,
-                      normalized_laplacian_spectrum,
+                      erdos_renyi_graph,
                       number_connected_components, connected_components,
                       draw)
 import matplotlib.pyplot as plt
+
+from network_destruction.distance import (laplacian_distance,
+                                          normalized_laplacian_distance)
 
 
 @dataclass
@@ -41,26 +43,6 @@ def remove_node_edges(graph: Graph, node: int) -> Graph:
     g.remove_edges_from(node_edges)
 
     return g
-
-
-def laplacian_distance(graph_0: Graph, graph_1: Graph) -> float:
-    spectrum_0 = laplacian_spectrum(graph_0)
-    spectrum_1 = laplacian_spectrum(graph_1)
-
-    differences = spectrum_0 - spectrum_1
-    powers = differences ** 2
-
-    return sqrt(sum(powers))
-
-
-def normalized_laplacian_distance(graph_0: Graph, graph_1: Graph) -> float:
-    spectrum_0 = normalized_laplacian_spectrum(graph_0)
-    spectrum_1 = normalized_laplacian_spectrum(graph_1)
-
-    differences = spectrum_0 - spectrum_1
-    powers = differences ** 2
-
-    return sqrt(sum(powers))
 
 
 def giant_order(graph: Graph) -> Graph:
