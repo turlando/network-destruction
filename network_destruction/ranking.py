@@ -17,14 +17,9 @@ class Ranking:
     components: int
     giant_order: int
 
-    laplacian_distance_from_original: float
-    laplacian_distance_from_previous: float
-
-    normalized_laplacian_distance_from_original: float
-    normalized_laplacian_distance_from_previous: float
-
-    giant_order_distance_from_original: float
-    giant_order_distance_from_previous: float
+    laplacian_distance: float
+    normalized_laplacian_distance: float
+    giant_order_distance: float
 
 
 def distance_ranking(
@@ -44,14 +39,9 @@ def distance_ranking(
             number_connected_components(mutilated_graph),
             giant_order(mutilated_graph),
 
-            laplacian_distance(original_graph, mutilated_graph),
             laplacian_distance(previous_graph, mutilated_graph),
-
-            normalized_laplacian_distance(original_graph, mutilated_graph),
             normalized_laplacian_distance(previous_graph, mutilated_graph),
-
             giant_order_distance(original_graph, mutilated_graph),
-            giant_order_distance(previous_graph, mutilated_graph)
         )
 
     def ranking(
@@ -68,28 +58,16 @@ def distance_ranking(
     return ranking
 
 
-laplacian_distance_from_original_ranking = distance_ranking(
-    lambda ranking: ranking.laplacian_distance_from_original
+laplacian_distance_ranking = distance_ranking(
+    lambda ranking: ranking.laplacian_distance
 )
 
-laplacian_distance_from_previous_ranking = distance_ranking(
-    lambda ranking: ranking.laplacian_distance_from_previous
+normalized_laplacian_distance_ranking = distance_ranking(
+    lambda ranking: ranking.normalized_laplacian_distance
 )
 
-normalized_laplacian_distance_from_original_ranking = distance_ranking(
-    lambda ranking: ranking.normalized_laplacian_distance_from_original
-)
-
-normalized_laplacian_distance_from_previous_ranking = distance_ranking(
-    lambda ranking: ranking.normalized_laplacian_distance_from_previous
-)
-
-giant_order_distance_from_original_ranking = distance_ranking(
-    lambda ranking: ranking.giant_order_distance_from_original
-)
-
-giant_order_distance_from_previous_ranking = distance_ranking(
-    lambda ranking: ranking.giant_order_distance_from_previous
+giant_order_distance_ranking = distance_ranking(
+    lambda ranking: ranking.giant_order_distance
 )
 
 
@@ -110,26 +88,14 @@ def disruption_ranking(
     return ranking
 
 
-laplacian_disruption_from_original_ranking = disruption_ranking(
-    laplacian_distance_from_original_ranking
+laplacian_disruption_ranking = disruption_ranking(
+    laplacian_distance_ranking
 )
 
-laplacian_disruption_from_previous_ranking = disruption_ranking(
-    laplacian_distance_from_previous_ranking
+normalized_laplacian_disruption_ranking = disruption_ranking(
+    normalized_laplacian_distance_ranking
 )
 
-normalized_laplacian_disruption_from_original_ranking = disruption_ranking(
-    normalized_laplacian_distance_from_original_ranking
-)
-
-normalized_laplacian_disruption_from_previous_ranking = disruption_ranking(
-    normalized_laplacian_distance_from_previous_ranking
-)
-
-giant_order_disruption_from_original_ranking = disruption_ranking(
-    giant_order_distance_from_original_ranking
-)
-
-giant_order_disruption_from_previous_ranking = disruption_ranking(
-    giant_order_distance_from_previous_ranking
+giant_order_disruption_ranking = disruption_ranking(
+    giant_order_distance_ranking
 )
