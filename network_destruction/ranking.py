@@ -28,7 +28,7 @@ def distance_ranking(
 
     def make_ranking(
             original_graph: Graph,
-            previous_graph,
+            previous_graph: Graph,
             node: int
     ) -> Ranking:
 
