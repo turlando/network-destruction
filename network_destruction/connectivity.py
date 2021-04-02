@@ -23,7 +23,9 @@ def bisect(
 
 
 def find_probability(components: int):
-    return bisect(lambda probability: make_graph(probability=probability),
-                  lambda graph: number_connected_components(graph) >= components,
-                  lambda value: value - value / 100,
-                  0.25)
+    return bisect(
+        lambda probability: make_graph(probability=probability),
+        lambda graph: number_connected_components(graph) >= components,
+        lambda value: value - value / 100,
+        0.25
+    )
