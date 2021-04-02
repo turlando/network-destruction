@@ -24,7 +24,27 @@
    pip install --editable .
    ```
 
+## Linting
+
+From the virtualenv:
+
+```
+pip install flake8
+flake8
+```
+
+## Type checking
+
+From the virtualenv:
+
+```
+pip install mypy
+env/bin/mypy --ignore-missing-imports -p network_destruction
+```
+
 ## Run ranking experiment
+
+From the virtualenv:
 
 ```
 python -m network_destruction
