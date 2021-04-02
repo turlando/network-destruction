@@ -1,4 +1,4 @@
-from typing import List
+from typing import Callable, List
 
 from network_destruction.graph import make_graph
 from network_destruction.plot import Plot, show_plot
@@ -10,73 +10,49 @@ from network_destruction.ranking import (
 )
 
 
-def show_laplacian_distance_comparison(
-        laplacian_rankings: List[Ranking],
-        normalized_laplacian_rankings: List[Ranking],
-        giant_order_rankings: List[Ranking],
-        probability: float
-):
-    show_plot(
-        f"Laplacian distance with p={probability}",
-        Plot("Disruption driven by laplacian distance",
-             range(len(laplacian_rankings)),
-             [r.laplacian_distance for r in laplacian_rankings],
-             [r.isolated_node for r in laplacian_rankings]),
-        Plot("Disruption driven by normalized laplacian distance",
-             range(len(normalized_laplacian_rankings)),
-             [r.laplacian_distance for r in normalized_laplacian_rankings],
-             [r.isolated_node for r in normalized_laplacian_rankings]),
-        Plot("Disruption driven by giant order distance",
-             range(len(giant_order_rankings)),
-             [r.laplacian_distance for r in giant_order_rankings],
-             [r.isolated_node for r in giant_order_rankings])
-    )
+def show_ranking_comparison(
+        name: str,
+        ranking: Callable[[Ranking], float]
+) -> Callable[[List[Ranking], List[Ranking], List[Ranking], float], None]:
+    def show(
+            laplacian_rankings: List[Ranking],
+            normalized_laplacian_rankings: List[Ranking],
+            giant_order_rankings: List[Ranking],
+            probability: float
+    ):
+        show_plot(
+            f"{name} distance with p={probability}",
+            Plot("Disruption driven by laplacian distance",
+                 range(len(laplacian_rankings)),
+                 [ranking(r) for r in laplacian_rankings],
+                 [r.isolated_node for r in laplacian_rankings]),
+            Plot("Disruption driven by normalized laplacian distance",
+                 range(len(normalized_laplacian_rankings)),
+                 [ranking(r) for r in normalized_laplacian_rankings],
+                 [r.isolated_node for r in normalized_laplacian_rankings]),
+            Plot("Disruption driven by giant order distance",
+                 range(len(giant_order_rankings)),
+                 [ranking(r) for r in giant_order_rankings],
+                 [r.isolated_node for r in giant_order_rankings])
+        )
+
+    return show
 
 
-def show_normalized_laplacian_distance_comparison(
-        laplacian_rankings: List[Ranking],
-        normalized_laplacian_rankings: List[Ranking],
-        giant_order_rankings: List[Ranking],
-        probability: float
-):
-    show_plot(
-        f"Normalized laplacian distance with p={probability}",
-        Plot("Disruption driven by laplacian distance",
-             range(len(laplacian_rankings)),
-             [r.normalized_laplacian_distance for r in laplacian_rankings],
-             [r.isolated_node for r in laplacian_rankings]),
-        Plot("Disruption driven by normalized laplacian distance",
-             range(len(normalized_laplacian_rankings)),
-             [r.normalized_laplacian_distance for r in normalized_laplacian_rankings],
-             [r.isolated_node for r in normalized_laplacian_rankings]),
-        Plot("Disruption driven by giant order distance",
-             range(len(giant_order_rankings)),
-             [r.normalized_laplacian_distance for r in giant_order_rankings],
-             [r.isolated_node for r in giant_order_rankings])
-    )
+show_laplacian_distance_comparison = show_ranking_comparison(
+    "Laplacian",
+    lambda ranking: ranking.laplacian_distance
+)
 
+show_normalized_laplacian_distance_comparison = show_ranking_comparison(
+    "Normalized laplacian",
+    lambda ranking: ranking.normalized_laplacian_distance
+)
 
-def show_giant_order_distance_comparison(
-        laplacian_rankings: List[Ranking],
-        normalized_laplacian_rankings: List[Ranking],
-        giant_order_rankings: List[Ranking],
-        probability: float
-):
-    show_plot(
-        f"Giant order distance with p={probability}",
-        Plot("Disruption driven by laplacian distance",
-             range(len(laplacian_rankings)),
-             [r.giant_order_distance for r in laplacian_rankings],
-             [r.isolated_node for r in laplacian_rankings]),
-        Plot("Disruption driven by normalized laplacian distance",
-             range(len(normalized_laplacian_rankings)),
-             [r.giant_order_distance for r in normalized_laplacian_rankings],
-             [r.isolated_node for r in normalized_laplacian_rankings]),
-        Plot("Disruption driven by giant order distance",
-             range(len(giant_order_rankings)),
-             [r.giant_order_distance for r in giant_order_rankings],
-             [r.isolated_node for r in giant_order_rankings])
-    )
+show_giant_order_distance_comparison = show_ranking_comparison(
+    "Giant order",
+    lambda ranking: ranking.giant_order_distance
+)
 
 
 def make_comparison(probability: float, iterations: float):
