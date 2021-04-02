@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import Callable, List, Iterator
 
 from dataclasses import dataclass, field
 
@@ -50,8 +50,8 @@ def distance_ranking(
     ) -> List[Ranking]:
 
         nodes = list(previous_graph.nodes())
-        rankings = [make_ranking(original_graph, previous_graph, node)
-                    for node in nodes]
+        rankings = (make_ranking(original_graph, previous_graph, node)
+                    for node in nodes)
 
         return sorted(rankings, key=metric, reverse=True)
 
@@ -73,9 +73,9 @@ giant_order_distance_ranking = distance_ranking(
 
 def disruption_ranking(
         distance_ranking: Callable[[Graph, Graph], List[Ranking]]
-):
+) -> Callable[[Graph, Graph], Iterator[Ranking]]:
 
-    def ranking(graph: Graph, iterations: int = 20):
+    def ranking(graph: Graph, iterations: int = 20) -> Iterator[Ranking]:
         previous_graph = graph
 
         for _ in range(iterations):
