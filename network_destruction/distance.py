@@ -1,33 +1,35 @@
 from typing import Callable
 from math import sqrt
-
 from numpy import ndarray
 from networkx import Graph, laplacian_spectrum, normalized_laplacian_spectrum
-
 from network_destruction.graph import giant_order
 
 
-def spectrum_distance(
+Distance = float
+GraphSpectrum = Callable[[Graph], ndarray]
+SpectralDistance = Callable[[Graph, Graph], float]
+
+
+def spectral_distance(
+        graph_0: Graph,
+        graph_1: Graph,
         spectrum: Callable[[Graph], ndarray]
-) -> Callable[[Graph, Graph], float]:
-    """
-    Return a function that computes the distance between two graphs
-    using a given spectrum function.
-    """
-    def distance(graph_0: Graph, graph_1: Graph) -> float:
-        spectrum_0 = spectrum(graph_0)
-        spectrum_1 = spectrum(graph_1)
+) -> Distance:
+    spectrum_0 = spectrum(graph_0)
+    spectrum_1 = spectrum(graph_1)
 
-        differences = spectrum_0 - spectrum_1
-        powers = differences ** 2
+    differences = spectrum_0 - spectrum_1
+    powers = differences ** 2
 
-        return sqrt(sum(powers))
-
-    return distance
+    return sqrt(sum(powers))
 
 
-laplacian_distance = spectrum_distance(laplacian_spectrum)
-normalized_laplacian_distance = spectrum_distance(normalized_laplacian_spectrum)
+def laplacian_distance(graph_0: Graph, graph_1: Graph):
+    return spectral_distance(graph_0, graph_1, laplacian_spectrum)
+
+
+def normalized_laplacian_distance(graph_0: Graph, graph_1: Graph):
+    return spectral_distance(graph_0, graph_1, normalized_laplacian_spectrum)
 
 
 def giant_order_distance(graph_0: Graph, graph_1: Graph):
