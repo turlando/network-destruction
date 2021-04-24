@@ -27,16 +27,17 @@ def analyze_disruption(
 
     first_iteration = disruption[0]
 
-    return [
+    first_result = Analysis(
+        first_iteration,
+        number_connected_components(first_iteration.graph),
+        giant_order(first_iteration.graph),
+        laplacian_distance(graph, first_iteration.graph),
+        normalized_laplacian_distance(graph, first_iteration.graph),
+        giant_order_distance(graph, first_iteration.graph)
+    )
+
+    rest_results = [
         Analysis(
-            first_iteration,
-            number_connected_components(first_iteration.graph),
-            giant_order(first_iteration.graph),
-            laplacian_distance(graph, first_iteration.graph),
-            normalized_laplacian_distance(graph, first_iteration.graph),
-            giant_order_distance(graph, first_iteration.graph)
-        ),
-        *[Analysis(
             d1,
             number_connected_components(d1.graph),
             giant_order(d1.graph),
@@ -44,5 +45,7 @@ def analyze_disruption(
             normalized_laplacian_distance(d0.graph, d1.graph),
             giant_order_distance(graph, d1.graph)
         )
-        for d0, d1 in pairwise(disruption)]
+        for d0, d1 in pairwise(disruption)
     ]
+
+    return [first_result, *rest_results]
