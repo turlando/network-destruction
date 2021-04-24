@@ -1,6 +1,6 @@
 from typing import Callable, Iterator, Tuple
 from dataclasses import dataclass
-from networkx import Graph
+from networkx import Graph, degree_centrality
 from network_destruction.graph import Node, isolate_node
 from network_destruction.distance import (
     SpectralDistance, laplacian_distance, normalized_laplacian_distance
@@ -56,3 +56,11 @@ def laplacian_distance_disruption(graph: Graph):
 
 def normalized_laplacian_distance_disruption(graph: Graph):
     return spectral_distance_disruption(graph, normalized_laplacian_distance)
+
+
+def degree_centrality_disruption(graph: Graph):
+    def metric(graph: Graph) -> Node:
+        best = max(degree_centrality(graph).items(), key=lambda x: x[1])
+        return best[0]
+
+    return disrupt(graph, metric)
