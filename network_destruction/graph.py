@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 from networkx import Graph, erdos_renyi_graph, connected_components, draw
 
 
+Node = int
+
+
 def make_graph(
         nodes: int = 100,
         probability: float = 0.25,
@@ -16,7 +19,7 @@ def show_graph(graph: Graph) -> None:
     figure.show()
 
 
-def remove_node_edges(graph: Graph, node: int) -> Graph:
+def isolate_node(graph: Graph, node: Node) -> Graph:
     g = graph.copy()
 
     node_edges = list(g.edges(node))
