@@ -1,6 +1,7 @@
 from typing import Callable, Sequence, Tuple
 from itertools import islice
 from dataclasses import dataclass
+from networkx import Graph
 from network_destruction.graph import make_graph
 from network_destruction.plot import Plot, show_plot
 from network_destruction.disruption import (
@@ -32,83 +33,106 @@ def show_analysis(
     )
 
 
-def show_analyses(probability, a_l, a_nl, a_dc):
+def show_analyses(
+        title_prefix: str,
+        laplacian_disruption_analysis: Sequence[Analysis],
+        normalized_laplacian_disruption_analysis: Sequence[Analysis],
+        degree_centrality_disruption_analysis: Sequence[Analysis]
+):
     show_analysis(
-        f"Laplacian distance. p={probability}",
+        f"{title_prefix}. Laplacian distance.",
         lambda a: a.laplacian_distance,
-        Result("Disruption driven by Laplacian distance", a_l),
-        Result("Disruption driven by normalized Laplacian disatance", a_nl),
-        Result("Disruption driven by degree centrality", a_dc)
+        Result("Disruption driven by Laplacian distance",
+               laplacian_disruption_analysis),
+        Result("Disruption driven by normalized Laplacian disatance",
+               normalized_laplacian_disruption_analysis),
+        Result("Disruption driven by degree centrality",
+               degree_centrality_disruption_analysis)
     )
 
     show_analysis(
-        f"Normalized laplacian distance. p={probability}",
+        f"{title_prefix}. Normalized laplacian distance.",
         lambda a: a.normalized_laplacian_distance,
-        Result("Disruption driven by Laplacian distance", a_l),
-        Result("Disruption driven by normalized Laplacian disatance", a_nl),
-        Result("Disruption driven by degree centrality", a_dc)
+        Result("Disruption driven by Laplacian distance",
+               laplacian_disruption_analysis),
+        Result("Disruption driven by normalized Laplacian disatance",
+               normalized_laplacian_disruption_analysis),
+        Result("Disruption driven by degree centrality",
+               degree_centrality_disruption_analysis)
     )
 
     show_analysis(
-        f"Giant order distance. p={probability}",
+        f"{title_prefix}. Giant order distance",
         lambda a: a.giant_order_distance,
-        Result("Disruption driven by Laplacian distance", a_l),
-        Result("Disruption driven by normalized Laplacian disatance", a_nl),
-        Result("Disruption driven by degree centrality", a_dc)
+        Result("Disruption driven by Laplacian distance",
+               laplacian_disruption_analysis),
+        Result("Disruption driven by normalized Laplacian disatance",
+               normalized_laplacian_disruption_analysis),
+        Result("Disruption driven by degree centrality",
+               degree_centrality_disruption_analysis)
     )
 
 
-def load_analyses(probability: float):
-    a_l = load_object(f"a_l_{probability}.pickle")
-    a_nl = load_object(f"a_nl_{probability}.pickle")
-    a_dc = load_object(f"a_dc_{probability}.pickle")
-
-    show_analyses(probability, a_l, a_nl, a_dc)
-
-
-def make_analysis(probability: float, iterations: int):
-    print(f"Generating graph with probability={probability}...", end=' ')
-    g = make_graph(probability=probability)
-    print("Done")
-
+def save_analysis(g: Graph, iterations: int, file_prefix: str):
     print("Computing laplacian distance disruption...", end=' ')
     d_l = tuple(islice(laplacian_distance_disruption(g), iterations))
-    save_object(d_l, f"d_l_{probability}.pickle")
+    save_object(d_l, f"{file_prefix}_disruption_laplacian_.pickle")
     print("Done")
 
     print("Analyzing laplacian distance disruption...", end=' ')
     a_l = analyze_disruption(g, d_l)
-    save_object(a_l, f"a_l_{probability}.pickle")
+    save_object(a_l, f"{file_prefix}_analysis_laplacian.pickle")
     print("Done")
 
     print("Computing normalized laplacian distance disruption...", end=' ')
     d_nl = tuple(islice(normalized_laplacian_distance_disruption(g), iterations))
-    save_object(d_nl, f"d_nl_{probability}.pickle")
+    save_object(d_nl, f"{file_prefix}_disruption_normalized_laplacian_.pickle")
     print("Done")
 
     print("Analyzing normalized laplacian distance disruption...", end=' ')
     a_nl = analyze_disruption(g, d_nl)
-    save_object(a_nl, f"a_nl_{probability}.pickle")
+    save_object(a_nl, f"{file_prefix}_analysis_normalized_laplacian.pickle")
     print("Done")
 
     print("Computing degree centrality disruption...", end=' ')
     d_dc = tuple(islice(degree_centrality_disruption(g), iterations))
-    save_object(d_dc, f"d_dc_{probability}.pickle")
+    save_object(d_dc, f"{file_prefix}_disruption_degree_centrality.pickle")
     print("Done")
 
     print("Analyzing degree centrality disruption...", end=' ')
     a_dc = analyze_disruption(g, d_dc)
-    save_object(a_dc, f"a_dc_{probability}.pickle")
-    print("Done")
-
-    print("Showing results...", end=' ')
-    show_analyses(probability, a_l, a_nl, a_dc)
+    save_object(a_dc, f"{file_prefix}_analysis_degree_centrality.pickle")
     print("Done")
 
     print()
 
 
+def load_analysis(title_prefix: str, file_prefix: str):
+    a_l = load_object(f"{file_prefix}_analysis_laplacian.pickle")
+    a_nl = load_object(f"{file_prefix}_analysis_normalized_laplacian.pickle")
+    a_dc = load_object(f"{file_prefix}_analysis_degree_centrality.pickle")
+
+    show_analyses(title_prefix, a_l, a_nl, a_dc)
+
+
+def save_erdos_renyi_analysis(probability: float, iterations: int):
+    print(f"Generating graph with probability={probability}...", end=' ')
+    g = make_graph(probability=probability)
+    print("Done")
+
+    save_analysis(g, iterations, f"erdos_renyi_{probability}_{iterations}")
+
+
+def load_erdos_renyi_analysis(probability: float, iterations: int):
+    load_analysis("Erdős-Rényi graph with p={probability}",
+                  f"erdos_renyi_{probability}_{iterations}")
+
+
 if __name__ == '__main__':
-    make_analysis(0.25, 70)
-    make_analysis(0.10, 70)
-    make_analysis(0.02, 70)
+    save_erdos_renyi_analysis(0.25, 70)
+    save_erdos_renyi_analysis(0.10, 70)
+    save_erdos_renyi_analysis(0.02, 70)
+
+    load_erdos_renyi_analysis(0.25, 70)
+    load_erdos_renyi_analysis(0.10, 70)
+    load_erdos_renyi_analysis(0.02, 70)
