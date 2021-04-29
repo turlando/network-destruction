@@ -46,7 +46,7 @@ def show_analyses(
         lambda a: a.laplacian_distance,
         Result("Disruption driven by Laplacian distance",
                laplacian_disruption_analysis),
-        Result("Disruption driven by normalized Laplacian disatance",
+        Result("Disruption driven by normalized Laplacian distance",
                normalized_laplacian_disruption_analysis),
         Result("Disruption driven by degree centrality",
                degree_centrality_disruption_analysis)
@@ -57,18 +57,18 @@ def show_analyses(
         lambda a: a.normalized_laplacian_distance,
         Result("Disruption driven by Laplacian distance",
                laplacian_disruption_analysis),
-        Result("Disruption driven by normalized Laplacian disatance",
+        Result("Disruption driven by normalized Laplacian distance",
                normalized_laplacian_disruption_analysis),
         Result("Disruption driven by degree centrality",
                degree_centrality_disruption_analysis)
     )
 
     show_analysis(
-        f"{title_prefix}. Giant order distance",
+        f"{title_prefix}. Giant order distance.",
         lambda a: a.giant_order_distance,
         Result("Disruption driven by Laplacian distance",
                laplacian_disruption_analysis),
-        Result("Disruption driven by normalized Laplacian disatance",
+        Result("Disruption driven by normalized Laplacian distance",
                normalized_laplacian_disruption_analysis),
         Result("Disruption driven by degree centrality",
                degree_centrality_disruption_analysis)
@@ -131,7 +131,7 @@ def load_erdos_renyi_analysis(probability: float, iterations: int):
 
 
 def save_barabasi_albert_analysis(edges: int, iterations: int):
-    print(f"Generating Barabasi-Albert graph with m={edges}...", end=' ')
+    print(f"Generating Barabási–Albert graph with m={edges}...", end=' ')
     g = make_barabasi_albert_graph(edges=edges)
     print("Done")
 
@@ -139,7 +139,7 @@ def save_barabasi_albert_analysis(edges: int, iterations: int):
 
 
 def load_barabasi_albert_analysis(edges: float, iterations: int):
-    load_analysis(f"Barabasi-Albert graph with m={edges}",
+    load_analysis(f"Barabási–Albert graph with m={edges}",
                   f"barabasi_albert_{edges}_{iterations}")
 
 
