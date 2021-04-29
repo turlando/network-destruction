@@ -1,5 +1,5 @@
 from typing import TypeVar, Callable
-from network_destruction.graph import make_graph
+from network_destruction.graph import make_erdos_renyi_graph
 from networkx import number_connected_components
 
 
@@ -24,7 +24,7 @@ def bisect(
 
 def find_probability(components: int):
     return bisect(
-        lambda probability: make_graph(probability=probability),
+        lambda probability: make_erdos_renyi_graph(probability=probability),
         lambda graph: number_connected_components(graph) >= components,
         lambda value: value - value / 100,
         0.25

@@ -1,8 +1,10 @@
-from typing import Callable, Sequence, Tuple
+from typing import Callable, Sequence
 from itertools import islice
 from dataclasses import dataclass
 from networkx import Graph
-from network_destruction.graph import make_graph
+from network_destruction.graph import (
+    make_erdos_renyi_graph, make_barabasi_albert_graph
+)
 from network_destruction.plot import Plot, show_plot
 from network_destruction.disruption import (
     laplacian_distance_disruption, normalized_laplacian_distance_disruption,
@@ -116,16 +118,29 @@ def load_analysis(title_prefix: str, file_prefix: str):
 
 
 def save_erdos_renyi_analysis(probability: float, iterations: int):
-    print(f"Generating graph with probability={probability}...", end=' ')
-    g = make_graph(probability=probability)
+    print(f"Generating Erdős-Rényi graph with p={probability}...", end=' ')
+    g = make_erdos_renyi_graph(probability=probability)
     print("Done")
 
     save_analysis(g, iterations, f"erdos_renyi_{probability}_{iterations}")
 
 
 def load_erdos_renyi_analysis(probability: float, iterations: int):
-    load_analysis("Erdős-Rényi graph with p={probability}",
+    load_analysis(f"Erdős-Rényi graph with p={probability}",
                   f"erdos_renyi_{probability}_{iterations}")
+
+
+def save_barabasi_albert_analysis(edges: int, iterations: int):
+    print(f"Generating Barabasi-Albert graph with m={edges}...", end=' ')
+    g = make_barabasi_albert_graph(edges=edges)
+    print("Done")
+
+    save_analysis(g, iterations, f"barabasi_albert_{edges}_{iterations}")
+
+
+def load_barabasi_albert_analysis(edges: float, iterations: int):
+    load_analysis(f"Barabasi-Albert graph with m={edges}",
+                  f"barabasi_albert_{edges}_{iterations}")
 
 
 if __name__ == '__main__':
@@ -136,3 +151,13 @@ if __name__ == '__main__':
     load_erdos_renyi_analysis(0.25, 70)
     load_erdos_renyi_analysis(0.10, 70)
     load_erdos_renyi_analysis(0.02, 70)
+
+    # ---
+
+    save_barabasi_albert_analysis(5, 70)
+    save_barabasi_albert_analysis(10, 70)
+    save_barabasi_albert_analysis(20, 70)
+
+    load_barabasi_albert_analysis(5, 70)
+    load_barabasi_albert_analysis(10, 70)
+    load_barabasi_albert_analysis(20, 70)

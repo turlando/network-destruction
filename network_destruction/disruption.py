@@ -1,4 +1,4 @@
-from typing import Callable, Iterator, Tuple
+from typing import Callable, Iterator
 from dataclasses import dataclass
 from networkx import Graph, degree_centrality
 from network_destruction.graph import Node, isolate_node

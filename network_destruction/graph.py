@@ -1,16 +1,31 @@
 import matplotlib.pyplot as plt
-from networkx import Graph, erdos_renyi_graph, connected_components, draw
+from networkx import (
+    Graph, erdos_renyi_graph, barabasi_albert_graph,
+    connected_components, draw
+)
 
 
 Node = int
 
 
-def make_graph(
-        nodes: int = 100,
+NODES = 100
+SEED = 1616492035
+
+
+def make_erdos_renyi_graph(
+        nodes: int = NODES,
         probability: float = 0.25,
-        seed: int = 1616492035
+        seed: int = SEED
 ) -> Graph:
     return erdos_renyi_graph(nodes, probability, seed)
+
+
+def make_barabasi_albert_graph(
+        nodes: int = NODES,
+        edges: int = 5,
+        seed: int = SEED
+):
+    return barabasi_albert_graph(nodes, edges, seed)
 
 
 def show_graph(graph: Graph) -> None:
