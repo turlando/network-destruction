@@ -7,8 +7,7 @@ setup(
     url='https://github.com/turlando/network-destruction',
 
     classifiers=[
-        ('License :: OSI Approved :: '
-         'GNU Affero General Public License v3 or later (AGPLv3+)')
+        'License :: OSI Approved :: GNU Affero General Public License v3'
     ],
 
     python_requires='>=3.6, <4',
